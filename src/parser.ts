@@ -1,12 +1,12 @@
 type ParserResult =
   | {
       kind: 'success'
-      value: JSON
+      value: object // `ts` way of expressing parsed JSON type?
     }
   | {
       kind: 'failure'
       value: string
-    }
+    } // `ts` way of expressing a `discriminated unions` type?
 
 export function parser(x: string): ParserResult {
   try {
