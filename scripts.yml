@@ -1,0 +1,11 @@
+scripts:
+  t:
+    desc: Run tests
+    cmd: deno test --allow-read --allow-env
+    env:
+      DENO_ENV: test
+  l:
+    desc: Run cli
+    cmd: deno run src/looker.ts
+    env:
+      DENO_ENV: dev
