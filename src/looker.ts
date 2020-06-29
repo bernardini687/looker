@@ -34,8 +34,3 @@ if (import.meta.main) {
     # PARAMETER  1:  ---
     #=======================================================================================
 */
-
-/*
-  • validate() should only pass `[]`, `{}`, `[1, '1']`, `{ 1: 1, 2: '2', 3: null }`
-  • ValidRecord -> an Object whose props are primitive values
-*/

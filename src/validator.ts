@@ -17,7 +17,7 @@ export function validate(x: string): ParserResult {
     if (isValidRecord(parsed)) {
       return { kind: 'success', value: parsed }
     } else {
-      throw new Error('Input must contain at least one key/value pair')
+      throw new Error('Input must be an object with primitive values')
     }
   } catch (error) {
     return { kind: 'failure', reason: `${error.message}: "${x}"` }
