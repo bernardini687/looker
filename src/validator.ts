@@ -12,7 +12,8 @@ type ParserResult =
 
 export function validate(x: string): ParserResult {
   try {
-    const parsed = JSON.parse(x, (k, v) => (v === null ? undefined : v))
+    const parsed = JSON.parse(x)
+
     if (isValidRecord(parsed)) {
       return { kind: 'success', value: parsed }
     } else {

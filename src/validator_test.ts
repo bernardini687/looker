@@ -1,54 +1,69 @@
 import { assertEquals } from './dev_deps.ts'
 import { validate as subject } from './validator.ts'
 
-Deno.test('foo', () => {
-  const result = subject('[]')
-  assertEquals(result, { kind: 'success', value: [] })
-})
-
-Deno.test('foo', () => {
-  const result = subject('{}')
+Deno.test('allowed objects', () => {
+  let result = subject('{}')
   assertEquals(result, { kind: 'success', value: {} })
+
+  result = subject('{"1":1,"foo":"bar"}')
+  assertEquals(result, { kind: 'success', value: { 1: 1, foo: 'bar' } })
+
+  result = subject('{"foo":null,"bar":true}')
+  assertEquals(result, { kind: 'success', value: { foo: null, bar: true } })
 })
 
-Deno.test('foo', () => {
-  const result = subject('{"foo":"bar"}')
-  assertEquals(result, { kind: 'success', value: { foo: 'bar' } })
+Deno.test('allowed arrays', () => {
+  let result = subject('[]')
+  assertEquals(result, { kind: 'success', value: [] })
+
+  result = subject('[true,1,"1",null]')
+  assertEquals(result, { kind: 'success', value: [true, 1, '1', null] })
 })
 
-Deno.test('foo', () => {
-  const result = subject('{"foo":null}')
-  assertEquals(result, { kind: 'success', value: { foo: undefined } })
-})
-
-Deno.test('bar', () => {
-  const result = subject('')
+Deno.test('invalid json input', () => {
+  let result = subject('')
   assertEquals(result, {
     kind: 'failure',
     reason: 'Unexpected end of JSON input: ""',
   })
-})
 
-Deno.test('bar', () => {
-  const result = subject((undefined as unknown) as string)
+  result = subject((undefined as unknown) as string)
   assertEquals(result, {
     kind: 'failure',
     reason: 'Unexpected token u in JSON at position 0: "undefined"',
   })
 })
 
-Deno.test('baz', () => {
-  const result = subject('1')
+Deno.test('invalid primitive inputs', () => {
+  let result = subject('1')
   assertEquals(result, {
     kind: 'failure',
     reason: 'Input must contain at least one key/value pair: "1"',
   })
-})
 
-Deno.test('baz', () => {
-  const result = subject('true')
+  result = subject('true')
   assertEquals(result, {
     kind: 'failure',
     reason: 'Input must contain at least one key/value pair: "true"',
+  })
+
+  result = subject('null')
+  assertEquals(result, {
+    kind: 'failure',
+    reason: 'Input must contain at least one key/value pair: "null"',
+  })
+})
+
+Deno.test('invalid complex inputs', () => {
+  let result = subject('{"bar":{}}')
+  assertEquals(result, {
+    kind: 'failure',
+    reason: 'Input must contain at least one key/value pair: "{"bar":{}}"',
+  })
+
+  result = subject('[true,1,"1",[]]')
+  assertEquals(result, {
+    kind: 'failure',
+    reason: 'Input must contain at least one key/value pair: "[true,1,"1",[]]"',
   })
 })

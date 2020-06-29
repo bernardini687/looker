@@ -10,7 +10,10 @@ function looker() {
     Deno.exit(1)
   }
 
+  // assume you can do Object.entries(result.value)
+  // build instance with metadata (hasHeader, maxLength) or fail
   // validate max `'# ' + key + ':  ' + value`.length < 89
+
   console.log(result.value)
 }
 
@@ -33,7 +36,6 @@ if (import.meta.main) {
 */
 
 /*
-  parser() should transform `null`s in `undefined`s
-  parser() should only pass `[]`, `{}`, `[1, '1']`, `{ 1: 1, 2: '2', 3: undefined }`
-  (an Object whose props are primitive values)
+  • validate() should only pass `[]`, `{}`, `[1, '1']`, `{ 1: 1, 2: '2', 3: null }`
+  • ValidRecord -> an Object whose props are primitive values
 */

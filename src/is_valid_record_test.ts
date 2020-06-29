@@ -26,10 +26,10 @@ Deno.test('is a record', () => {
   result = subject([true])
   assert(result)
 
-  result = subject({ foo: undefined })
+  result = subject({ foo: null })
   assert(result)
 
-  result = subject([undefined])
+  result = subject([null])
   assert(result)
 })
 
@@ -43,13 +43,13 @@ Deno.test('is not a record', () => {
   result = subject(true)
   assert(!result)
 
-  result = subject(undefined)
-  assert(!result)
-
   result = subject(null)
   assert(!result)
 
-  result = subject([null])
+  result = subject(undefined)
+  assert(!result)
+
+  result = subject([undefined])
   assert(!result)
 
   result = subject({ foo: {} })
