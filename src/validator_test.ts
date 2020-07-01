@@ -5,19 +5,19 @@ Deno.test('allowed objects', () => {
   let result = subject('{}')
   assertEquals(result, { kind: 'success', value: {} })
 
-  result = subject('{"1":1,"foo":"bar"}')
-  assertEquals(result, { kind: 'success', value: { 1: 1, foo: 'bar' } })
+  result = subject('{"1":"1","foo":"bar"}')
+  assertEquals(result, { kind: 'success', value: { 1: '1', foo: 'bar' } })
 
-  result = subject('{"foo":null,"bar":true}')
-  assertEquals(result, { kind: 'success', value: { foo: null, bar: true } })
+  result = subject('{"foo":null,"bar":"baz"}')
+  assertEquals(result, { kind: 'success', value: { foo: null, bar: 'baz' } })
 })
 
 Deno.test('allowed arrays', () => {
   let result = subject('[]')
   assertEquals(result, { kind: 'success', value: [] })
 
-  result = subject('[true,1,"1",null]')
-  assertEquals(result, { kind: 'success', value: [true, 1, '1', null] })
+  result = subject('["foo","1",null]')
+  assertEquals(result, { kind: 'success', value: ['foo', '1', null] })
 })
 
 Deno.test('invalid json input', () => {

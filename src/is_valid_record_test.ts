@@ -14,18 +14,6 @@ Deno.test('is a record', () => {
   result = subject(['bar'])
   assert(result)
 
-  result = subject({ foo: 1 })
-  assert(result)
-
-  result = subject([1])
-  assert(result)
-
-  result = subject({ foo: true })
-  assert(result)
-
-  result = subject([true])
-  assert(result)
-
   result = subject({ foo: null })
   assert(result)
 
@@ -62,5 +50,17 @@ Deno.test('is not a record', () => {
   assert(!result)
 
   result = subject([1, [true]])
+  assert(!result)
+
+  result = subject({ foo: 1 })
+  assert(!result)
+
+  result = subject([1])
+  assert(!result)
+
+  result = subject({ foo: true })
+  assert(!result)
+
+  result = subject([true])
   assert(!result)
 })

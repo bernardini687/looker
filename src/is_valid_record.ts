@@ -1,13 +1,9 @@
-type Primitive = boolean | number | string | null
-
-/** An Object whose props hold primitive values _(boolean, number, string, null)_ */
-export type ValidRecord = Record<string, Primitive>
+/** An Object whose props hold strings or nulls. */
+export type ValidRecord = Record<string, string>
 
 export function isValidRecord(x: unknown): x is ValidRecord {
   if (x instanceof Object) {
-    return Object.values(x).every(
-      y => ['boolean', 'number', 'string'].includes(typeof y) || y === null
-    )
+    return Object.values(x).every(y => typeof y === 'string' || y === null)
   } else {
     return false
   }

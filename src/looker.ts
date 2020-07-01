@@ -10,9 +10,8 @@ function looker() {
     Deno.exit(1)
   }
 
-  // assume you can do Object.entries(result.value)
-  // build instance with metadata (hasHeader, maxLength) or fail
   // validate max `'# ' + key + ':  ' + value`.length < 89
+  // build instance with metadata (header, leftPadding, payload)
 
   console.log(result.value)
 }
