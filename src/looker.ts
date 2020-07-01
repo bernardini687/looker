@@ -10,8 +10,9 @@ function looker() {
     Deno.exit(1)
   }
 
-  // validate max `'# ' + key + ':  ' + value`.length < 89
-  // build instance with metadata (header, leftPadding, payload)
+  // try/catch new Body
+
+  // body.display()
 
   console.log(result.value)
 }
@@ -27,15 +28,15 @@ if (import.meta.main) {
 
   Result:
 
-    #===  FUNCTION  ========================================================================
-    #         NAME:  info
-    #  DESCRIPTION:  Display info.
-    # PARAMETER  1:  ---
+    #====  FUNCTION  =======================================================================
+    #          NAME:  info
+    #   DESCRIPTION:  Display info.
+    #  PARAMETER  1:  ---
     #=======================================================================================
 
-    #===  FUNCTIONFUNCTION  ================================================================
-    #                 NAME:  info
-    #          DESCRIPTION:  Display info.
-    #         PARAMETER  1:  ---
+    #  FUNCTIONFUNCTION  ===================================================================
+    #              NAME:  info
+    #       DESCRIPTION:  Display info.
+    #      PARAMETER  1:  ---
     #=======================================================================================
 */
