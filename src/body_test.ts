@@ -1,25 +1,6 @@
 import { assertEquals, assertThrows } from './dev_deps.ts'
 import { Body as Subject } from './body.ts'
 
-/*
-#  FOO  ============
-#  BAR:  baz
-#===================
-
-#  FOOFOOFOOFOOFOO
-#              BAR:  baz
-#===================
-
-#  ASDF  ===========
-#   BAR:  baz
-#===================
-
-#===================
-#  ASDF:  asdf
-#   BAR:  baz
-#===================
-*/
-
 const leftMargin = '#  '
 const placeholder = '---'
 const separator = ':  '
@@ -28,9 +9,7 @@ Deno.test('build a Body with header', () => {
   const validRecord = { header: 'foo', bar: 'baz' }
   const { header, ...payload } = validRecord
 
-  const result = new Subject(validRecord)
-
-  assertEquals(result, {
+  assertEquals(new Subject(validRecord), {
     header,
     leftMargin,
     padding: 3,
@@ -44,9 +23,7 @@ Deno.test('build a Body with longer header', () => {
   const validRecord = { header: 'qwerty', foo: 'bar' }
   const { header, ...payload } = validRecord
 
-  const result = new Subject(validRecord)
-
-  assertEquals(result, {
+  assertEquals(new Subject(validRecord), {
     header: 'qwerty',
     leftMargin,
     padding: 6,
@@ -60,9 +37,7 @@ Deno.test('build a Body with empty header', () => {
   const validRecord = { header: '', foo: 'bar' }
   const { header, ...payload } = validRecord
 
-  const result = new Subject(validRecord)
-
-  assertEquals(result, {
+  assertEquals(new Subject(validRecord), {
     header: '',
     leftMargin,
     padding: 3,
@@ -75,9 +50,7 @@ Deno.test('build a Body with empty header', () => {
 Deno.test('build a Body without header', () => {
   const validRecord = { asdf: 'asdf', foo: 'bar' }
 
-  const result = new Subject(validRecord)
-
-  assertEquals(result, {
+  assertEquals(new Subject(validRecord), {
     header: '',
     leftMargin,
     padding: 4,
@@ -88,17 +61,14 @@ Deno.test('build a Body without header', () => {
 })
 
 Deno.test('throws if header exceeds max length', () => {
-  const validRecord = { header: 'asdf'.repeat(20), asdf: 'asdf' }
-
   /*
-  #  asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf  ===
-  #                                                                              asdf:  asdf
-  #=======================================================================================
+#  asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf  ===
+#                                                                              asdf:  asdf
+#=======================================================================================
   */
-
   assertThrows(
     () => {
-      new Subject(validRecord)
+      new Subject({ header: 'asdf'.repeat(20), asdf: 'asdf' })
     },
     Error,
     'get rid of 2 character'
@@ -106,29 +76,26 @@ Deno.test('throws if header exceeds max length', () => {
 })
 
 Deno.test('throw if payload exceeds max length', () => {
-  const validRecord = { asdf: 'asdf'.repeat(20), foo: 'bar' }
-
   /*
-  #=======================================================================================
-  #  asdf:  asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf
-  #   foo:  bar
-  #=======================================================================================
+#=======================================================================================
+#  asdf:  asdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdf
+#   foo:  bar
+#=======================================================================================
   */
-
   assertThrows(
     () => {
-      new Subject(validRecord)
+      new Subject({ asdf: 'asdf'.repeat(20), foo: 'bar' })
     },
     Error,
     'get rid of 2 character'
   )
 })
 
-Deno.test('edge case:', () => {
+Deno.test('edge case: null and empty string values', () => {
   /*
-  #=======================================================================================
-  –  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:  ---
-  #=======================================================================================
+#=======================================================================================
+#  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:  ---
+#=======================================================================================
   */
   const size82Key = 'a'.repeat(82)
 
@@ -149,11 +116,11 @@ Deno.test('edge case:', () => {
   )
 })
 
-Deno.test('edge case:', () => {
+Deno.test('edge case: just about right key with null value', () => {
   /*
-  #=======================================================================================
-  –  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:  ---
-  #=======================================================================================
+#=======================================================================================
+#  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:  ---
+#=======================================================================================
   */
   const size79Key = 'a'.repeat(79)
 
@@ -167,52 +134,82 @@ Deno.test('edge case:', () => {
   })
 })
 
-Deno.test('edge case:', () => {
+Deno.test('edge case: just about right header without payload', () => {
   /*
-  #  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-  #=======================================================================================
+#  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+#=======================================================================================
   */
   const size85Header = 'a'.repeat(85)
-  console.log(new Subject({ header: size85Header }))
 
-  const size87Header = 'a'.repeat(87)
-  console.log(new Subject({ header: size87Header }))
-
-  // if only header, 88 - '#  ' - '  ' should be max allowed (83)
-  // test if edge case header plus
-
-  /*
-  #  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-  #                                                                                    f:  b
-  #=======================================================================================
-  */
-
-  /*
-  #  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-  #                                                                                  f:  b
-  #=======================================================================================
-  */
+  assertEquals(new Subject({ header: size85Header }), {
+    header: size85Header,
+    leftMargin,
+    padding: 85,
+    payload: {},
+    placeholder,
+    separator,
+  })
 })
 
-/*
-  extra long header
-  just about right header
+Deno.test('edge case: just about right header with just about right payload', () => {
+  /*
+#  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+#                                                                                  f:  b
+#=======================================================================================
+  */
+  const size81Header = 'a'.repeat(81)
 
-  extra long value
-  just about right value
+  assertEquals(new Subject({ header: size81Header, f: 'b' }), {
+    header: size81Header,
+    leftMargin,
+    padding: 81,
+    payload: { f: 'b' },
+    placeholder,
+    separator,
+  })
+})
 
-  extra long key
-  just about right key
+Deno.test('edge case: just about right header with payload', () => {
+  /*
+#  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+#                                                                                    f:  b
+#=======================================================================================
+  */
+  assertThrows(
+    () => {
+      new Subject({ header: 'a'.repeat(83), f: 'b' })
+    },
+    Error,
+    'get rid of 2 character'
+  )
+})
 
-  just about right header + key/value
-*/
+Deno.test('edge case: header exceeds by 1', () => {
+  /*
+#  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+#=======================================================================================
+  */
+  assertThrows(
+    () => {
+      new Subject({ header: 'a'.repeat(86) })
+    },
+    Error,
+    'get rid of 1 character'
+  )
+})
 
-// { header: 'asdf'.repeat(20) }
-
-// { header: 'asdf'.repeat(40) }
-
-// { foo: 'asdf'.repeat(40) }
-
-// const superLongKey = 'asdf'.repeat(40)
-// { [superLongKey]: 'asdf'.repeat(40) }
-// { [superLongKey]: 'asdf' }
+Deno.test('edge case: value too long', () => {
+  /*
+#  function  ===========================================================================
+#      asdf:  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+#         f:  aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+#=======================================================================================
+  */
+  assertThrows(
+    () => {
+      new Subject({ header: 'function', asdf: 'a'.repeat(74), f: 'a'.repeat(75) })
+    },
+    Error,
+    'get rid of 1 character'
+  )
+})
