@@ -5,13 +5,13 @@ export class Body {
   readonly leftMargin = '#  '
   readonly padding: number
   readonly payload: ValidRecord
-  // readonly placeholder = '---'
+  readonly placeholder = '---'
   readonly separator = ':  '
 
   constructor(validRecord: ValidRecord) {
     const { header, ...payload } = validRecord
 
-    this.header = header
+    this.header = header || ''
     this.payload = payload
 
     this.padding = this.maxFieldSize()
@@ -20,10 +20,10 @@ export class Body {
   }
 
   private validatePayload(): void {
-    const lineSizes = Object.values(this.payload).map(
-      // this.value?.length || this.placeholder.length // '---'
-      value => this.leftMargin.length + this.padding + this.separator.length + value.length
-    )
+    const lineSizes = Object.values(this.payload).map(value => {
+      const valueSize = value?.length || this.placeholder.length
+      return this.leftMargin.length + this.padding + this.separator.length + valueSize
+    })
 
     console.log(lineSizes) // TEMP
 
@@ -37,7 +37,6 @@ export class Body {
   }
 
   private maxFieldSize(): number {
-    const headerSize = this.header?.length || 0
-    return Math.max(...Object.keys(this.payload).map(key => key.length), headerSize)
+    return Math.max(...Object.keys(this.payload).map(key => key.length), this.header.length)
   }
 }
