@@ -1,20 +1,32 @@
 import { validate } from './validator.ts'
+import { Body } from './body.ts'
 
-function looker() {
-  const [jsonString] = Deno.args
+type Result<T> =
+  | {
+      kind: 'success'
+      value: T
+    }
+  | {
+      kind: 'failure'
+      reason: string
+    }
 
-  const result = validate(jsonString)
-
+function unwrapResultOrExit<T>(result: Result<T>): T {
   if (result.kind === 'failure') {
     console.error(result.reason)
     Deno.exit(1)
   }
+  return result.value
+}
 
-  // try/catch new Body
+function looker(): void {
+  const [jsonString] = Deno.args
 
-  // body.display()
+  const validRecord = unwrapResultOrExit(validate(jsonString))
 
-  console.log(result.value)
+  const body = unwrapResultOrExit(Body.build(validRecord))
+
+  console.log(body)
 }
 
 if (import.meta.main) {

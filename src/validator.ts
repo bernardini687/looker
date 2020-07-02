@@ -1,18 +1,18 @@
 import { isValidRecord, ValidRecord } from './is_valid_record.ts'
 
-type ParserResult =
+type Result<T> =
   | {
       kind: 'success'
-      value: ValidRecord
+      value: T
     }
   | {
       kind: 'failure'
       reason: string
     }
 
-export function validate(x: string): ParserResult {
+export function validate(jsonString: string): Result<ValidRecord> {
   try {
-    const parsed = JSON.parse(x)
+    const parsed = JSON.parse(jsonString)
 
     if (isValidRecord(parsed)) {
       return { kind: 'success', value: parsed }
@@ -20,6 +20,6 @@ export function validate(x: string): ParserResult {
       throw new Error('Input must be an object with primitive values')
     }
   } catch (error) {
-    return { kind: 'failure', reason: `${error.message}: "${x}"` }
+    return { kind: 'failure', reason: `${error.message}: "${jsonString}"` }
   }
 }
