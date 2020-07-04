@@ -1,5 +1,5 @@
-import { assertEquals } from './dev_deps.ts'
-import { validate as subject } from './validator.ts'
+import { assertEquals } from '../dev_deps.ts'
+import { validate as subject } from '../src/validator.ts'
 
 Deno.test('allowed objects', () => {
   let result = subject('{}')

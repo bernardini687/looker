@@ -1,5 +1,5 @@
-import { assert } from './dev_deps.ts'
-import { isValidRecord as subject } from './is_valid_record.ts'
+import { assert } from '../dev_deps.ts'
+import { isValidRecord as subject } from '../src/is_valid_record.ts'
 
 Deno.test('is a record', () => {
   let result = subject({})

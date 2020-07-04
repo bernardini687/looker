@@ -1,5 +1,5 @@
-import { assertEquals, assertThrows } from './dev_deps.ts'
-import { Body as Subject } from './body.ts'
+import { assertEquals, assertThrows } from '../dev_deps.ts'
+import { Body as Subject } from '../src/body.ts'
 
 const leftMargin = '#  '
 const placeholder = '---'

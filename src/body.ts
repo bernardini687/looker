@@ -1,14 +1,5 @@
+import { Result } from './unwrap_result.ts'
 import { ValidRecord } from './is_valid_record.ts'
-
-type Result<T> =
-  | {
-      kind: 'success'
-      value: T
-    }
-  | {
-      kind: 'failure'
-      reason: string
-    }
 
 export class Body {
   static readonly MAX_LINE = 88

@@ -1,23 +1,6 @@
-import { validate } from './validator.ts'
 import { Body } from './body.ts'
-
-type Result<T> =
-  | {
-      kind: 'success'
-      value: T
-    }
-  | {
-      kind: 'failure'
-      reason: string
-    }
-
-function unwrapResultOrExit<T>(result: Result<T>): T {
-  if (result.kind === 'failure') {
-    console.error(result.reason)
-    Deno.exit(1)
-  }
-  return result.value
-}
+import { unwrapResultOrExit } from './unwrap_result.ts'
+import { validate } from './validator.ts'
 
 function looker(): void {
   const [jsonString] = Deno.args

@@ -1,14 +1,5 @@
 import { isValidRecord, ValidRecord } from './is_valid_record.ts'
-
-type Result<T> =
-  | {
-      kind: 'success'
-      value: T
-    }
-  | {
-      kind: 'failure'
-      reason: string
-    }
+import { Result } from './unwrap_result.ts'
 
 export function validate(jsonString: string): Result<ValidRecord> {
   try {
