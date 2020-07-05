@@ -1,5 +1,5 @@
 import { assertEquals, assertThrows } from '../dev_deps.ts'
-import { Body as Subject } from '../src/body.ts'
+import { Body as Subject, Body } from '../src/body.ts'
 
 const leftMargin = '#  '
 const placeholder = '---'
@@ -212,4 +212,51 @@ Deno.test('edge case: value too long', () => {
     Error,
     'get rid of 1 character'
   )
+})
+
+Deno.test('build the lines without header', () => {
+  const subject = new Subject({
+    napara: null,
+    pristinid: 'barallike',
+    sacknut: 'monopom',
+  })
+  assertEquals(subject.lines(), [
+    '#=======================================================================================',
+    '#     NAPARA:  ---',
+    '#  PRISTINID:  barallike',
+    '#    SACKNUT:  monopom',
+    '#=======================================================================================',
+  ])
+})
+
+Deno.test('build the lines with longer header', () => {
+  const subject = new Subject({
+    napara: null,
+    pristinid: 'barallike',
+    sacknut: 'monopom',
+    header: 'thrushesoup',
+  })
+  assertEquals(subject.lines(), [
+    '#  THRUSHESOUP  ========================================================================',
+    '#       NAPARA:  ---',
+    '#    PRISTINID:  barallike',
+    '#      SACKNUT:  monopom',
+    '#=======================================================================================',
+  ])
+})
+
+Deno.test('build the lines with shorter header', () => {
+  const subject = new Subject({
+    pristinid: 'barallike',
+    sacknut: 'monopom',
+    thrushesoup: null,
+    header: 'roblox',
+  })
+  assertEquals(subject.lines(), [
+    '#=====  ROBLOX  ========================================================================',
+    '#    PRISTINID:  barallike',
+    '#      SACKNUT:  monopom',
+    '#  THRUSHESOUP:  ---',
+    '#=======================================================================================',
+  ])
 })

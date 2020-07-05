@@ -8,7 +8,7 @@ export function validate(jsonString: string): Result<ValidRecord> {
     if (isValidRecord(parsed)) {
       return { kind: 'success', value: parsed }
     } else {
-      throw new Error('Input must be an object with primitive values')
+      throw new Error('Input must be an object with string values')
     }
   } catch (error) {
     return { kind: 'failure', reason: `${error.message}: "${jsonString}"` }
